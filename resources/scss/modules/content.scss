@@ -1,0 +1,12 @@
+.main-content {
+  min-width: 70vw;
+  display: flex;
+  flex-direction: column;
+    .content {
+      flex: 1 0 auto;
+        .order-tab{
+          display: flex;
+          align-items: center;
+        }
+    }
+}
