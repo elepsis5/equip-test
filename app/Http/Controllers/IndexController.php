@@ -16,10 +16,10 @@ class IndexController extends Controller
     public int $countOfProducts;
 
     public function index() {
-        $products = Product::getByPagination(6);
+        $products = Product::getAllByPagination(6);
 
         $menu = new Menu();
-        $menu = $menu->groupsTree;
+        $menu = $menu->menu;
 
         return view('app/index', [
             'products' => $products,

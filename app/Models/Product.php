@@ -21,7 +21,11 @@ class Product extends Model
         return $this->belongsTo(Group::class, 'id_group');
     }
 
-    public function scopeGetByPagination($query, $quantity) {
+    public function scopeGetAllByPagination($query, $quantity) {
         return $query->with('group', 'price')->orderBy('name','desc')->paginate($quantity);
+    }
+
+    public function scopeGetByIds($query, $arrIds, $quantity) {
+        return $query->whereIn('id_group', $arrIds)->paginate($quantity);
     }
 }

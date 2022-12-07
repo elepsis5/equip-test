@@ -10,58 +10,45 @@ use App\Models\Group;
 
 class Menu extends Model
 {
-    public array $groupsTree;
     public Collection $basicGroups;
-
+    public array $groupsTree;
+    public array $menu;
+    public array $groups;
 
     public function __construct() {
         parent::__construct();
-        $this->basicGroups = Group::getBasicGroups();
-        $this->getGroupsTree($this->basicGroups);
-
+        $this->groups = Group::all()->toArray();
+        $this->groupsTree = $this->getGroupsTree($this->groups);
+        $this->menu = $this->groupsTree;
     }
 
-    public function getGroupsTree($groups):void {
-
+    public function getGroupsTree(array $groups):array {
         foreach ($groups as $basicGroup) {
-            $rootGroup = [];
-            $rootGroup['id'] =  $basicGroup->id;
-            $rootGroup['name'] =  $basicGroup->name;
-            $child = [];
-            $this->buildTree($rootGroup, $child);
-            $rootGroup['child'] =  $child;
-            $this->groupsTree[] = $rootGroup;
+            return $this->buildTree($groups);
         }
     }
 
-    public function buildTree($parent, &$arrOfChildren):void {
-        $children = DB::table('groups')->where('id_parent', $parent['id'])->get()->toArray();
-        if ($children) {
-            foreach ($children as $id => $child) {
-                $count = DB::table('products')->where('id_group', $child->id)->count();
-                $child = (array)$child;
-                if ($count > 0) {
-                    $child['count'] = $count;
-                }
-                $child['child'] = [];
-                $arrOfChildren[$child['id']] = $child;
-                $this->buildTree($child, $arrOfChildren[$child['id']]['child']);
+    public function buildTree($array):array {
+        $tree = [];
+        foreach ($array as $id => $child) {
+            if (!$child['id_parent']) {
+                $tree[$id] = $child;
+            }
+            else{
+                $this->getChild($child, $tree);
             }
         }
+        return $tree;
     }
 
-    public function getCountOfProducts($arrOfGroups):array {
-        $countInGroup = [];
-        foreach ($arrOfGroups as $baseGroup => $value) {
-            foreach ($value as $childGroup) {
-                $result =  Product::query()->where('id_group', $childGroup->id)->count();
-
-                if ($result > 0) {
-                    $countInGroup[$baseGroup][] = $result;
-                }
+    public function getChild($child, &$array) {
+        foreach ($array as &$item) {
+            if ($child['id_parent'] == $item['id']) {
+                $item['child'][$child['id']] = $child;
             }
-            $countInGroup[$baseGroup] = array_sum($countInGroup[$baseGroup]);
+            elseif (array_key_exists('child',$item)) {
+                $this->getChild($child, $item['child']);
+            }
         }
-        return $countInGroup;
     }
 }
