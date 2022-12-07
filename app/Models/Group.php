@@ -16,4 +16,8 @@ class Group extends Model
     public function products() {
         return $this->hasMany(Product::class,'id_group');
     }
+
+    public function scopeGetBasicGroups($query) {
+        return $query->where('id_parent', '0')->get();
+    }
 }

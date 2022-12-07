@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\IndexController;
 
 
 /*
@@ -15,4 +15,4 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-Route::get('/',[ProductController::class, 'getAll']);
+Route::get('/',[IndexController::class, 'index']);
