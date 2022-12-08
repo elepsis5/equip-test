@@ -10,7 +10,7 @@
     </div>
     <ul class="list-group list-group-flush">
         @foreach($products as $product)
-            <li class="list-group-item">{{$product->group->name}}, {{$product->name}}, {{$product->price->price}}</li>
+            <li class="list-group-item">{{$product->name}}, цена: {{$product->price->price}} руб.</li>
         @endforeach
     </ul>
 </div>

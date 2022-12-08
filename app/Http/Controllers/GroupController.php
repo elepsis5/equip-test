@@ -15,45 +15,50 @@ class GroupController extends Controller
 {
     public function toGroup(Request $request, $id) {
         $ids = [];
+        $group = [];
+        $menu = new Menu($id);
+        $menuTree = $menu->menu;
+        $bread = $menu->bread;
 
-        $menu = new Menu();
-        $menu = $menu->menu;
-        $group = $this->getGroupByRequest($menu, $id);
+        $this->getGroupByRequest($menuTree, $id, $group);
+
         $this->getGroupIds($group, $ids);
-        $productsQuantity = Product::whereIn('id_group', $ids)->get()->count();
+//        $productsQuantity = Product::whereIn('id_group', $ids)->get()->count();
         $products = Product::getByIds($ids,6);
 
         return view('app/index', [
             'products' => $products,
-            'menu' => $menu,
-            'productsQuantity' => $productsQuantity
+            'menu' => $menuTree,
+            'bread' => $bread
+//            'productsQuantity' => $productsQuantity
         ]);
     }
 
-    public function getGroupIds($array, &$arrOfChildren):void {
+    public function getGroupIds($array, &$storeIds):void {
         if (array_key_exists('id',$array)) {
-            $arrOfChildren[] = $array['id'];
+            $storeIds[] = $array['id'];
             if (array_key_exists('child', $array)) {
-                $this->getGroupIds($array['child'], $arrOfChildren);
+                $this->getGroupIds($array['child'], $storeIds);
             }
         }
         else {
             foreach ($array as $item) {
-                $arrOfChildren[] = $item['id'];
+                $storeIds[] = $item['id'];
                 if (array_key_exists('child', $item)) {
-                    $this->getGroupIds($item['child'], $arrOfChildren);
+                    $this->getGroupIds($item['child'], $storeIds);
                 }
             }
         }
     }
 
-    public function getGroupByRequest($array, $request) {
-        $result = [];
-        foreach($array as $item) {
+    public function getGroupByRequest($tree, $request, &$group) {
+        foreach($tree as $item) {
             if ($item['id'] == $request) {
-                $result = $item;
+                $group = $item;
+            }
+            elseif (array_key_exists('child', $item)) {
+                $this->getGroupByRequest($item['child'], $request, $group);
             }
         }
-        return $result;
     }
 }
