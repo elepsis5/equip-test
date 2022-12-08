@@ -19,33 +19,29 @@ class GroupController extends Controller
         $menu = new Menu($id);
         $menuTree = $menu->menu;
         $bread = $menu->bread;
-
         $this->getGroupByRequest($menuTree, $id, $group);
-
-        $this->getGroupIds($group, $ids);
-//        $productsQuantity = Product::whereIn('id_group', $ids)->get()->count();
+        $this->getAllGroupIds($group, $ids);
         $products = Product::getByIds($ids,6);
 
         return view('app/index', [
             'products' => $products,
             'menu' => $menuTree,
             'bread' => $bread
-//            'productsQuantity' => $productsQuantity
         ]);
     }
 
-    public function getGroupIds($array, &$storeIds):void {
+    public function getAllGroupIds($array, &$storeIds):void {
         if (array_key_exists('id',$array)) {
             $storeIds[] = $array['id'];
             if (array_key_exists('child', $array)) {
-                $this->getGroupIds($array['child'], $storeIds);
+                $this->getAllGroupIds($array['child'], $storeIds);
             }
         }
         else {
             foreach ($array as $item) {
                 $storeIds[] = $item['id'];
                 if (array_key_exists('child', $item)) {
-                    $this->getGroupIds($item['child'], $storeIds);
+                    $this->getAllGroupIds($item['child'], $storeIds);
                 }
             }
         }

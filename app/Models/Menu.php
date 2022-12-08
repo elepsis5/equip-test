@@ -6,20 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Models\Group;
+use App\Helpers;
 
 class Menu extends Model
 {
     public Collection $basicGroups;
     public array $groupsTree;
     public array $menu;
-    public array $groups;
+    public  $groups;
     public int $requestId;
     public array $bread = [];
 
     public function __construct($id = 0) {
         parent::__construct();
         $this->requestId = $id;
-        $this->groups = Group::all()->toArray();
+        $this->groups = Group::getWithCount();
         $this->groupsTree = $this->buildTree($this->groups);
         $this->bread = array_reduce($this->breadCollect($this->groupsTree), 'array_merge', array());
         $this->menu = $this->groupsTree;
@@ -35,24 +36,25 @@ class Menu extends Model
                 $tree[$id] = $child;
             }
             else{
-                $this->getChild($child, $tree);
+                $this->getChild($child, $tree, $sum);
             }
         }
         return $tree;
     }
 
-    public function getChild($child, &$array) {
+    public function getChild($child, &$array, &$sum):void {
         foreach ($array as &$item) {
+            $sum += $item['count'];
             if ($child['id_parent'] == $item['id']) {
                 $item['child'][$child['id']] = $child;
             }
             elseif (array_key_exists('child',$item)) {
-                $this->getChild($child, $item['child']);
+                $this->getChild($child, $item['child'], $sum);
             }
         }
     }
 
-    public function breadInit($treeArray, &$tempIds, &$storeIds, &$tempNode) {
+    public function breadInit($treeArray, &$tempIds, &$storeIds, &$tempNode):void {
         if (array_key_exists('id',$treeArray)) {
             if (array_key_exists('id_parent', $treeArray) && $treeArray['id_parent'] == 0) {
                 $tempIds = [];
@@ -79,7 +81,7 @@ class Menu extends Model
         }
     }
 
-    public function breadCollect($treeArray) {
+    public function breadCollect($treeArray):array {
         $storeIds = [];
         $tempIds = [];
         $tempNode = [];

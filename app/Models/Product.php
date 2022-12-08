@@ -28,4 +28,7 @@ class Product extends Model
     public function scopeGetByIds($query, $arrIds, $quantity) {
         return $query->whereIn('id_group', $arrIds)->paginate($quantity);
     }
+    public function scopeGetByGroup($query, $id) {
+        return $query->where('id_group', $id)->count();
+    }
 }
