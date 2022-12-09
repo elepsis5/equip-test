@@ -25,7 +25,15 @@ class GroupController extends Controller
         ]);
     }
 
-    public function getAllGroupIds($array, &$storeIds):void {
+    /**
+     * получаем все id товаров текущей группы
+     *
+     * @param array $array дерево текущей группы
+     * @param array $storeIds храним тут
+     *
+     * @return void
+     */
+    public function getAllGroupIds(array $array, array &$storeIds):void {
         if (array_key_exists('id',$array)) {
             $storeIds[] = $array['id'];
             if (array_key_exists('child', $array)) {
@@ -42,7 +50,16 @@ class GroupController extends Controller
         }
     }
 
-    public function getGroupByRequest($tree, $request, &$group) {
+    /**
+     * получаем текущую группу
+     *
+     * @param array $tree дерево всех групп
+     * @param array $group храним тут
+     * @param int $request запрос
+     *
+     * @return void
+     */
+    public function getGroupByRequest(array $tree, int $request, &$group) {
         foreach($tree as $item) {
             if ($item['id'] == $request) {
                 $group = $item;
