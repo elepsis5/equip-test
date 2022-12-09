@@ -1,15 +1,27 @@
-.main-content {
-  min-width: 70vw;
-  display: flex;
-  flex-direction: column;
+body a {
+  text-decoration: none;
+}
+#main {
+  margin: 1rem;
+  .main-content {
+    .header {
+      padding-bottom: 0!important;
+    }
+    min-width: 70vw;
+    display: flex;
+    flex-direction: column;
     .content {
       flex: 1 0 auto;
-        .order-tab{
-          display: flex;
-          align-items: center;
-        }
+      .order-tab{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
     }
+  }
 }
-.active-link {
-  color: red!important;
+.quantity {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
 }

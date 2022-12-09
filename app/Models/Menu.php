@@ -22,7 +22,13 @@ class Menu extends Model
         $this->requestId = $id;
         $this->groups = Group::getWithCount();
         $this->groupsTree = $this->buildTree($this->groups);
-        $this->bread = array_unique(array_reduce($this->breadCollect($this->groupsTree), 'array_merge', array()));
+        $this->bread = array_values(
+            array_unique(
+                array_reduce(
+                    $this->breadCollect($this->groupsTree), 'array_merge', array()
+                )
+            )
+        );
 
         $this->menu = $this->groupsTree;
         if ($this->bread) {

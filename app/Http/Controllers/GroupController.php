@@ -11,7 +11,7 @@ use App\Models\Menu;
 
 class GroupController extends Controller
 {
-    public function toGroup($id, $sort = 'nameAsc') {
+    public function toGroup($id, $sort = 'nameAsc', $q = 6) {
         $ids = [];
         $group = [];
         $menu = new Menu($id);
@@ -19,7 +19,7 @@ class GroupController extends Controller
         $bread = $menu->bread;
         $this->getGroupByRequest($menuTree, $id, $group);
         $this->getAllGroupIds($group, $ids);
-        $products = Product::getAllByPagination(6, $ids, $sort);
+        $products = Product::getAllByPagination($q, $ids, $sort);
 
         return view('app/index', [
             'products' => $products,
