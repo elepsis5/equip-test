@@ -36,6 +36,13 @@ class Menu extends Model
         }
     }
 
+    /**
+     * строим вложенное меню
+     *
+     * @param array $array массив с группами
+     *
+     * @return array
+     */
     public function buildTree($array):array {
         $tree = [];
         foreach ($array as $id => $child) {
@@ -52,7 +59,16 @@ class Menu extends Model
         return $tree;
     }
 
-    public function getChild($child, &$array, &$sum):void {
+    /**
+     * получаем дочерний элемент каждой подгруппы
+     *
+     * @param array $child
+     * @param array $array массив с группами
+     *
+     * @param $sum
+     * @return void
+     */
+    public function getChild(array $child, array &$array, &$sum):void {
         foreach ($array as &$item) {
             $sum += $item['count'];
             if ($child['id_parent'] == $item['id']) {

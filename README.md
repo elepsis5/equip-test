@@ -7,9 +7,9 @@
  
 Порядок действий:
 
-1. docker-compose up;
-2. docker-compose exec web bash;
+1. docker-compose up
+2. docker-compose exec web bash
 3. php artisan tinker --execute="(new PDO('mysql:host=' . env('DB_HOST'), env('DB_USERNAME'), env('DB_PASSWORD')))->exec('CREATE DATABASE ' . env('DB_DATABASE'))"
-4. php artisan db:seed;
+4. php artisan db:seed
 
 

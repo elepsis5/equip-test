@@ -22,22 +22,23 @@ class Product extends Model
     }
 
     public function scopeGetAllByPagination($query, $quantity, $arrIds = null, $sort = 'nameAsc') {
+        $group = '';
         switch($sort) {
             case 'nameAsc':
-                $sort = 'asc';
                 $group = 'name';
+                $sort = 'asc';
                 break;
             case 'nameDesc':
-                $sort = 'desc';
                 $group = 'name';
+                $sort = 'desc';
                 break;
             case 'priceAsc':
-                $sort = 'asc';
                 $group = 'price';
+                $sort = 'asc';
                 break;
             case 'priceDesc':
-                $sort = 'desc';
                 $group = 'price';
+                $sort = 'desc';
                 break;
 
         }

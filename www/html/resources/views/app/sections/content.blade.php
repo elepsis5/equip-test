@@ -44,7 +44,7 @@
     <ul class="list-group list-group-flush">
         @foreach($products as $product)
             <li class="list-group-item"><a
-                        href="{{route('toProduct', [$product->id_group, $product->id])}}">{{$product->name}}
+                        href="{{route('product', [$product->id_group, $product->id])}}">{{$product->name}}
                     - {{$product->price}} руб.</a></li>
         @endforeach
     </ul>
