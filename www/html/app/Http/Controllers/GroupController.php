@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
 use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 use App\Models\Menu;
+use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {

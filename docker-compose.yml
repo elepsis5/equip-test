@@ -1,0 +1,42 @@
+version: '3'
+services:
+  web:
+    build: ${IMAGE_PHP_APACHE_8_1}
+    ports:
+      - 8081:80
+      - 443:443
+    volumes:
+      - ${VHOST_APP_NOTE_API}:${VHOST_CONTAINER}
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+      - ${LOGS_PATH_APP}:${LOGS_PATH_CONTAINER_APACHE}
+    networks:
+      - backend
+  db:
+    image: mysql
+    volumes:
+      - ${MYSQL_PATH_HOST}:${MYSQL_PATH_CONTAINER}
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+    - 3306:3306
+    restart: always
+    environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - backend
+  pma:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+    depends_on:
+      - db
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
