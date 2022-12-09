@@ -43,7 +43,7 @@ class Menu extends Model
      *
      * @return array
      */
-    public function buildTree($array):array {
+    public function buildTree(array $array):array {
         $tree = [];
         foreach ($array as $id => $child) {
             if ($this->requestId == $child['id']) {
@@ -80,7 +80,17 @@ class Menu extends Model
         }
     }
 
-    public function breadInit($treeArray, &$tempIds, &$storeIds, &$tempNode):void {
+    /**
+     * собираем хлебные крошки
+     *
+     * @param array $treeArray дерево групп
+     * @param array $tempIds
+     * @param array $storeIds храним тут
+     * @param array $tempNode
+     *
+     * @return void
+     */
+    public function breadInit(array $treeArray, array &$tempIds, array &$storeIds, array &$tempNode):void {
         if (array_key_exists('id',$treeArray)) {
             if (array_key_exists('id_parent', $treeArray) && $treeArray['id_parent'] == 0) {
                 $tempIds = [];
@@ -107,7 +117,14 @@ class Menu extends Model
         }
     }
 
-    public function breadCollect($treeArray):array {
+    /**
+     * сохраняем хлебные крошки
+     *
+     * @param array $treeArray дерево групп
+     *
+     * @return array
+     */
+    public function breadCollect(array $treeArray):array {
         $storeIds = [];
         $tempIds = [];
         $tempNode = [];
@@ -117,6 +134,15 @@ class Menu extends Model
         return $storeIds;
     }
 
+    /**
+     * создаем меню из хлебных крошек
+     *
+     * @param array $bread ids крошек
+     * @param array $arrOfGroups массив групп
+     * @param array $breadMenu храним тут
+     *
+     * @return array
+     */
     public function buildBreadMenu($bread, $arrOfGroups, &$breadMenu) {
         $i = 0;
         $count = count($bread);
