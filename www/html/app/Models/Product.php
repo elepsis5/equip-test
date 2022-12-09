@@ -21,7 +21,17 @@ class Product extends Model
         return $this->belongsTo(Group::class, 'id_group');
     }
 
-    public function scopeGetAllByPagination($query, $quantity, $arrIds = null, $sort = 'nameAsc') {
+    /**
+     * получаем товары в зависимости от заданной сортировки
+     *
+     * @param $query
+     * @param int $quantity сколько выводить
+     * @param mixed $arrIds массив с ids групп
+     * @param string $sort как сортируем
+     *
+     * @return array
+     */
+    public function scopeGetAllByPagination($query, int $quantity, $arrIds = null, $sort = 'nameAsc') {
         $group = '';
         switch($sort) {
             case 'nameAsc':
@@ -57,11 +67,27 @@ class Product extends Model
         }
     }
 
-    public function scopeGetByGroup($query, $id) {
+    /**
+     * выборка по группе
+     *
+     * @param $query
+     * @param int $id id группы
+     *
+     * @return array
+     */
+    public function scopeGetByGroup($query, int $id) {
         return $query->where('id_group', $id)->count();
     }
 
-    public function scopeGetById($query, $id) {
+    /**
+     * получаем товар по id
+     *
+     * @param $query
+     * @param int $id id товара
+     *
+     * @return array
+     */
+    public function scopeGetById($query, int $id) {
         return $query->with('price')->where('id', $id)->first();
     }
 }
