@@ -22,7 +22,14 @@ class Group extends Model
         return $query->where('id_parent', '0')->get();
     }
 
-    public function scopeGetWithCount($query) {
+    /**
+     * получаем массив групп с кол-вом товаров
+     *
+     * @param $query
+     *
+     * @return array
+     */
+    public function scopeGetWithCount($query):array {
         return $query->select(array('groups.*', DB::raw('COUNT(products.id) as count')))
             ->leftJoin('products', 'groups.id', 'products.id_group')
             ->groupBy('id')
