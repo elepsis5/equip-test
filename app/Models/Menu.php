@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Models\Group;
-use App\Helpers;
 
 class Menu extends Model
 {
@@ -16,14 +15,19 @@ class Menu extends Model
     public  $groups;
     public int $requestId;
     public array $bread = [];
+    public array $breadMenu = [];
 
     public function __construct($id = 0) {
         parent::__construct();
         $this->requestId = $id;
         $this->groups = Group::getWithCount();
         $this->groupsTree = $this->buildTree($this->groups);
-        $this->bread = array_reduce($this->breadCollect($this->groupsTree), 'array_merge', array());
+        $this->bread = array_unique(array_reduce($this->breadCollect($this->groupsTree), 'array_merge', array()));
+
         $this->menu = $this->groupsTree;
+        if ($this->bread) {
+            $this->buildBreadMenu($this->bread, $this->groups, $this->breadMenu);
+        }
     }
 
     public function buildTree($array):array {
@@ -89,5 +93,18 @@ class Menu extends Model
         $this->breadInit($treeArray, $tempIds,$storeIds,$tempNode);
 
         return $storeIds;
+    }
+
+    public function buildBreadMenu($bread, $arrOfGroups, &$breadMenu) {
+        $i = 0;
+        $count = count($bread);
+        while ($i < $count) {
+            foreach ($arrOfGroups as $group) {
+                if ($group['id'] == $bread[$i]) {
+                    $breadMenu[] = $group;
+                }
+            }
+            $i++;
+        }
     }
 }

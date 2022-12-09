@@ -19,11 +19,13 @@ class IndexController extends Controller
         $products = Product::getAllByPagination(6);
 
         $menu = new Menu();
-        $menu = $menu->menu;
+        $menuTree = $menu->menu;
+        $bread = $menu->bread;
 
         return view('app/index', [
             'products' => $products,
-            'menu' => $menu
+            'menu' => $menuTree,
+            'bread' => $bread
         ]);
     }
 }

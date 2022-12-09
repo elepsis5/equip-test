@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Models\Menu;
 
-use function Doctrine\Common\Cache\Psr6\get;
-
 class GroupController extends Controller
 {
-    public function toGroup(Request $request, $id) {
+    public function toGroup($id, $sort = 'nameAsc') {
         $ids = [];
         $group = [];
         $menu = new Menu($id);
@@ -21,7 +19,7 @@ class GroupController extends Controller
         $bread = $menu->bread;
         $this->getGroupByRequest($menuTree, $id, $group);
         $this->getAllGroupIds($group, $ids);
-        $products = Product::getByIds($ids,6);
+        $products = Product::getAllByPagination(6, $ids, $sort);
 
         return view('app/index', [
             'products' => $products,

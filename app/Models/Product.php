@@ -21,14 +21,46 @@ class Product extends Model
         return $this->belongsTo(Group::class, 'id_group');
     }
 
-    public function scopeGetAllByPagination($query, $quantity) {
-        return $query->with('group', 'price')->orderBy('name','desc')->paginate($quantity);
+    public function scopeGetAllByPagination($query, $quantity, $arrIds = null, $sort = 'nameAsc') {
+        switch($sort) {
+            case 'nameAsc':
+                $sort = 'asc';
+                $group = 'name';
+                break;
+            case 'nameDesc':
+                $sort = 'desc';
+                $group = 'name';
+                break;
+            case 'priceAsc':
+                $sort = 'asc';
+                $group = 'price';
+                break;
+            case 'priceDesc':
+                $sort = 'desc';
+                $group = 'price';
+                break;
+
+        }
+        if (!$arrIds) {
+            return $query->select('products.*', 'prices.price')
+                ->leftJoin('prices', 'products.id', 'prices.id_product')
+                ->orderBy($group, $sort)
+                ->paginate($quantity);
+        }
+        else {
+            return $query->select('products.*', 'prices.price')
+                ->leftJoin('prices', 'products.id', 'prices.id_product')
+                ->whereIn('products.id_group', $arrIds)
+                ->orderBy($group, $sort)
+                ->paginate($quantity);
+        }
     }
 
-    public function scopeGetByIds($query, $arrIds, $quantity) {
-        return $query->whereIn('id_group', $arrIds)->paginate($quantity);
-    }
     public function scopeGetByGroup($query, $id) {
         return $query->where('id_group', $id)->count();
+    }
+
+    public function scopeGetById($query, $id) {
+        return $query->with('price')->where('id', $id)->first();
     }
 }

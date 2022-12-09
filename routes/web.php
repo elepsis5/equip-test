@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\ProductController;
 
 
 /*
@@ -16,5 +17,7 @@ use App\Http\Controllers\GroupController;
 |
 */
 
-Route::get('/',[IndexController::class, 'index']);
+Route::get('/',[IndexController::class, 'index'])->name('index');;
 Route::get('/group/{id}',[GroupController::class, 'toGroup'])->name('toGroup');
+Route::get('/group/{id}/{sort}',[GroupController::class, 'toGroup'])->name('toSort');
+Route::get('/group/{groupId}/product/{id}',[ProductController::class, 'show'])->name('toProduct');
