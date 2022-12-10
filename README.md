@@ -14,10 +14,12 @@ docker-compose up
 docker-compose exec web bash
 
 3. 
-composer install (ждем пока установятся зависимости)
+composer update (ждем пока установятся зависимости)
 
 4. 
 php artisan tinker --execute="(new PDO('mysql:host=' . env('DB_HOST'), env('DB_USERNAME'), env('DB_PASSWORD')))->exec('CREATE DATABASE ' . env('DB_DATABASE'))"
 php artisan db:seed
+
+Приложение доступно по порту **:8081**
 
 
