@@ -1,10 +1,8 @@
 /www/html/node_modules
-/www/html/public/build
 /www/html/public/hot
 /www/html/public/storage
 /www/html/storage/*.key
 /www/html/vendor
-/www/html/.env
 /www/html/.env.backup
 /www/html/.env.production
 /www/html/.phpunit.result.cache

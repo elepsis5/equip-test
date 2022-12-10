@@ -6,7 +6,7 @@ services:
       - 8081:80
       - 443:443
     volumes:
-      - ${VHOST_APP_NOTE_API}:${VHOST_CONTAINER}
+      - ${VHOST_APP_EQUIP}:${VHOST_CONTAINER}
       - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
       - ${LOGS_PATH_APP}:${LOGS_PATH_CONTAINER_APACHE}
     networks:
