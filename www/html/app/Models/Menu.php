@@ -22,13 +22,14 @@ class Menu extends Model
         $this->requestId = $id;
         $this->groups = Group::getWithCount();
         $this->groupsTree = $this->buildTree($this->groups);
-        $this->bread = array_values(
-            array_unique(
-                array_reduce(
-                    $this->breadCollect($this->groupsTree), 'array_merge', array()
-                )
-            )
-        );
+//        $this->bread = array_values(
+//            array_unique(
+//                array_reduce(
+//                    $this->breadCollect($this->groupsTree), 'array_merge', array()
+//                )
+//            )
+//        );
+        $this->bread = $this->breadCollect($this->groupsTree);
 
         $this->menu = $this->groupsTree;
         if ($this->bread) {
@@ -93,19 +94,16 @@ class Menu extends Model
     public function breadInit(array $treeArray, array &$tempIds, array &$storeIds, array &$tempNode):void {
         if (array_key_exists('id',$treeArray)) {
             if (array_key_exists('id_parent', $treeArray) && $treeArray['id_parent'] == 0) {
-                $tempIds = [];
                 $tempIds[] = $treeArray['id'];
             }
 
             if(array_key_exists('current', $treeArray)  && $treeArray['current'] == true) {
-                $tempIds[] = $treeArray['id'];
-                $storeIds[] = $tempIds;
-                $storeIds[] = $tempNode;
+                $tempNode[] = $treeArray['id'];
+                $storeIds = array_merge($tempIds, $tempNode);
                 return;
             }
             elseif (array_key_exists('child', $treeArray)) {
-                $tempNode[$treeArray['id']] = $treeArray['id'];
-
+                $tempNode[] = $treeArray['id'];
                 $this->breadInit($treeArray['child'], $tempIds, $storeIds, $tempNode);
             }
         }
